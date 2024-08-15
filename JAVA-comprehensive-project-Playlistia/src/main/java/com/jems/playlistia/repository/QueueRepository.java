@@ -3,6 +3,7 @@ package com.jems.playlistia.repository;
 
 import com.jems.playlistia.Aggregate.Music;
 import com.jems.playlistia.Aggregate.Queue;
+import com.jems.playlistia.stream.MyObjectOutputStream;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -53,6 +54,31 @@ public class QueueRepository {
         }  catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    // 재생목록 번호 != 노래 번호
+    // 재생목록에서는 재생목록 번호만 보이고 노래 번호는 안 보임
+
+    // 재생 목록의
+    public int selectLastQueueNo() {
+
+        Queue lastqueue = queueList.get(queueList.size()-1);
+        return lastqueue.getMusicNo();
+
+    }
+    public int addQueueList (Queue queue) {
+        int result = 0;
+
+        try(MyObjectOutputStream moos = new MyObjectOutputStream(new FileOutputStream(FILE_PATH, true))) {
+            moos.writeObject(queue);
+            queueList.add(queue);
+            result = 1;
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return result;
     }
 
 }

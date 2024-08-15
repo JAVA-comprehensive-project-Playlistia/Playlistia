@@ -1,16 +1,23 @@
 package com.jems.playlistia.run;
 
 import com.jems.playlistia.Aggregate.Music;
+import com.jems.playlistia.Aggregate.Playlist;
 import com.jems.playlistia.Aggregate.Queue;
 import com.jems.playlistia.repository.MusicRepository;
+import com.jems.playlistia.repository.PlaylistRepository;
 import com.jems.playlistia.service.MusicService;
 
+import javax.script.ScriptContext;
 import java.util.Scanner;
 
 public class Application {
 
     private static final MusicService musicService = new MusicService();
     private static final MusicRepository musicRepository = new MusicRepository();
+
+    private static final PlaylistRepository playlistRepository = new PlaylistRepository();
+
+    private static int selectedMusicNo = 0;
 
     public static void main(String[] args) {
 //        Application app = new Application();
@@ -28,7 +35,7 @@ public class Application {
             switch(choice) {
                 case 1:
                     musicService.findAllMusic();    // 전체 음악 보여주기
-                    int selectedMusicNo = chooseMusicNo();  // 사용자로부터 노래 번호 입력 받기
+                    selectedMusicNo = chooseMusicNo();  // 사용자로부터 노래 번호 입력 받기
                     Music selectedMusic = musicRepository.findMusicByNo(selectedMusicNo);   // 사용자가 입력한 노래 번호로 노래 찾기
 
                     if (selectedMusic != null) {
@@ -36,7 +43,16 @@ public class Application {
                     }
                     break;
                 case 2: musicService.showAllQueue(); break;  // 1번과 유사하게
-                case 3: break;  //
+                case 3:
+                    musicService.findAllPlaylist(); // 전체 플레이리스트 보여주기
+
+                    int selectedPlaylistNo = choosePlaylistNo();    // 사용자로부터 플리 번호 입력 받기
+
+                    // 선택한 플레이리스트의 음악 목록 출력
+                    musicService.findAllMusicInPlaylist(selectedPlaylistNo);
+
+                    break;
+
                 case 9:
                     System.out.println("플레이리스티아를 종료합니다. 또 만나요!");
                     return;
@@ -47,6 +63,15 @@ public class Application {
 
         }
 
+    }
+
+    private static int choosePlaylistNo() {
+        Scanner sc = new Scanner(System.in);
+        int selectedPlaylistNo = 0;
+        System.out.println("원하는 플레이리스트 번호를 선택하세요.=====");
+        System.out.print("플레이리스트 번호 : ");
+        selectedPlaylistNo = sc.nextInt();
+        return selectedPlaylistNo;
     }
 
     // 1. 전체 음악 보기 -> 노래 선택
@@ -114,5 +139,15 @@ public class Application {
 
     }
 
+    private static void addQueue() {
+        Scanner sc = new Scanner(System.in);
+        int selectedMusicNo = 0;
+        System.out.println("=====원하는 노래 번호를 선택하세요.=====");
+        System.out.print("노래 번호 : ");
+        selectedMusicNo = sc.nextInt();
+
+        musicService.registQueue(selectedMusicNo);
+
+    }
 
 }
