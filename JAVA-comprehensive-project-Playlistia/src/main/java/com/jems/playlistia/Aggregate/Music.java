@@ -30,6 +30,14 @@ public class Music implements Serializable {
         this.duration = duration;
     }
 
+    public int getMusicNo() {
+        return musicNo;
+    }
+
+    public void setMusicNo(int musicNo) {
+        this.musicNo = musicNo;
+    }
+
     public String getName() {
         return name;
     }
@@ -94,10 +102,11 @@ public class Music implements Serializable {
         this.duration = duration;
     }
 
-    @Override   // 출력 형식 이쁘게 바꾸기!!
+    @Override
     public String toString() {
         return "Music{" +
-                "name='" + name + '\'' +
+                "musicNo=" + musicNo +
+                ", name='" + name + '\'' +
                 ", lyrics='" + lyrics + '\'' +
                 ", lyricsWriter=" + Arrays.toString(lyricsWriter) +
                 ", composer=" + Arrays.toString(composer) +
@@ -113,11 +122,14 @@ public class Music implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Music music = (Music) o;
-        return duration == music.duration && Objects.equals(name, music.name) && Objects.equals(lyrics, music.lyrics) && Objects.deepEquals(lyricsWriter, music.lyricsWriter) && Objects.deepEquals(composer, music.composer) && Objects.equals(genre, music.genre) && Objects.equals(albumName, music.albumName) && Objects.equals(singer, music.singer);
+        return musicNo == music.musicNo && duration == music.duration && Objects.equals(name, music.name) && Objects.equals(lyrics, music.lyrics) && Arrays.equals(lyricsWriter, music.lyricsWriter) && Arrays.equals(composer, music.composer) && Objects.equals(genre, music.genre) && Objects.equals(albumName, music.albumName) && Objects.equals(singer, music.singer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, lyrics, Arrays.hashCode(lyricsWriter), Arrays.hashCode(composer), genre, albumName, singer, duration);
+        int result = Objects.hash(musicNo, name, lyrics, genre, albumName, singer, duration);
+        result = 31 * result + Arrays.hashCode(lyricsWriter);
+        result = 31 * result + Arrays.hashCode(composer);
+        return result;
     }
 }
