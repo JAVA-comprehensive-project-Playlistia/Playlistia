@@ -1,6 +1,7 @@
 package com.jems.playlistia.run;
 
 import com.jems.playlistia.Aggregate.Music;
+import com.jems.playlistia.Aggregate.Queue;
 import com.jems.playlistia.service.MusicService;
 
 import java.util.Scanner;
@@ -22,7 +23,7 @@ public class Application {
 
             switch(choice) {
                 case 1: musicService.findAllMusic(); break;
-                case 2: break;  // 1번과 유사하게
+                case 2: musicService.showAllQueue(); break;  // 1번과 유사하게
                 case 3: break;  //
                 case 9:
                     System.out.println("플레이리스티아를 종료합니다. 또 만나요!");
@@ -34,6 +35,7 @@ public class Application {
         }
 
     }
+
 
     private static Music showPlaylist(Music selected) {
         Music selectedPlaylist = selected;
@@ -48,6 +50,7 @@ public class Application {
             String choosePlaylist = scanner.nextLine();
             System.out.println("");
             switch(choosePlaylist) {
+
 
             }
         }

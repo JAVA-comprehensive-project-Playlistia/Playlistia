@@ -58,7 +58,7 @@ public class MusicRepository {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
 
             while (true) {
-                musicList.add((Music) ois.readObject());  // Object -> User 타입으로 형 변환
+                musicList.add((Music) ois.readObject());  // Object -> Music 타입으로 형 변환
             }
 
         } catch (EOFException e) {  // 파일의 끝을 읽으면 곡 정보 모두 로드 완료
