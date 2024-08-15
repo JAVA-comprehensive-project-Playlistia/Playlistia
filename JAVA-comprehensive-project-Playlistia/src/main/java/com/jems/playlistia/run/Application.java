@@ -36,6 +36,9 @@ public class Application {
 
     }
 
+    // 1. 전체 음악 보기 -> 노래 선택
+    // 1. 전체 음악 보기 -> 노래 선택 -> 재생, 중지, 이전(원하는 노래 번호 선택하세요)로 돌아가기
+
     // 원하는 노래 번호를 입력 받아 반환하는 메소드
     // 이후에도 노래 번호를 입력 받을 경우가 있을까봐 Application에 선언함... 있나?
     private static int chooseMusicNo() {
