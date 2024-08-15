@@ -11,6 +11,7 @@ public class MusicRepository {
     private static final String FILE_PATH = "src/main/java/com/jems/playlistia/db/Music.dat";
 
 
+    // MusicRepository에 저장된 모든 Music 객체를 반환하기 위한 메소드
     public ArrayList<Music> selectAllMusic() {
         return musicList;
     }
@@ -66,6 +67,17 @@ public class MusicRepository {
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
 
+    // 특정 노래의 번호에 해당하는 Music 객체를 반환하는 메소드
+    // MusicRepo
+    public Music findMusicByNo(int musicNo) {
+        for (Music music : musicList) {
+            // 노래 번호와 일치하는 Music 객체를 반환
+            if (music.getMusicNo() == musicNo) {
+                return music;
+            }
+        }
+        return null;    // 해당 번호의 노래가 없을 경우 null 반환
     }
 }
