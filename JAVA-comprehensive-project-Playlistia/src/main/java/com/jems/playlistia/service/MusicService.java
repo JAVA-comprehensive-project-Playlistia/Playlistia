@@ -56,7 +56,7 @@ public class MusicService {
         }
     }
 
-    public void registQueue(int musicNo) {
+    public void registQueue(int selectMusicNo) {
 
         Music music = new Music();
         Queue queue = new Queue();
@@ -68,9 +68,17 @@ public class MusicService {
 
         if(result == 1) {
             System.out.println(music.getName() + "를 재생목록에 추가했습니다.");
+        }
+
+    }
+
+    public void removeQueueMusic(int selectMusicNo) {
+        int result = queueRepository.deleteQueueMusic(selectMusicNo);
+
+        if(result == 1) {
+            System.out.println("노래가 삭제되었습니다.");
         } else {
             System.out.println("입력하신 노래 번호가 없습니다.");
         }
-
     }
 }
