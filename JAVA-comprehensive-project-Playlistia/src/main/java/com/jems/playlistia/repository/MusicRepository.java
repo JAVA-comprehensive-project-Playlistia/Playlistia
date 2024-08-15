@@ -21,17 +21,17 @@ public class MusicRepository {
 
         if (!file.exists()) {
             ArrayList<Music> music = new ArrayList<>();
-            music.add(new Music("Dynamite", "Cause I-I-I'm in the stars tonight...",
+            music.add(new Music(1, "Dynamite", "Cause I-I-I'm in the stars tonight...",
                     new String[] {"Jessica Agombar", "David Stewart"},
                     new String[] {"Jessica Agombar", "David Stewart"},
                     "Pop", "BE", "BTS", 199));
 
-            music.add(new Music("사랑에 연습이 있었다면", "사랑에 연습이 있었다면...",
+            music.add(new Music(2, "사랑에 연습이 있었다면", "사랑에 연습이 있었다면...",
                     new String[] {"Jukjae"},
                     new String[] {"Jukjae"},
                     "Ballad", "이해", "Jukjae", 253));
 
-            music.add(new Music("Shape of You", "The club isn't the best place to find a lover...",
+            music.add(new Music(3, "Shape of You", "The club isn't the best place to find a lover...",
                     new String[] {"Ed Sheeran", "Steve Mac", "Johnny McDaid"},
                     new String[] {"Ed Sheeran", "Steve Mac", "Johnny McDaid"},
                     "Pop", "÷ (Divide)", "Ed Sheeran", 233));
