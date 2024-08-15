@@ -71,15 +71,15 @@ public class PlaylistRepository {
 
     }
 
-    public void selectPlaylist (Playlist playlist) {
+    public void selectPlaylist () {
         Scanner sc = new Scanner(System.in);
         System.out.print("플레이리스트를 선택하세요 : ");
         int chooseplaylistNo  = sc.nextInt();
         sc.nextLine();
 
-//        if(chooseplaylistNo == playlist.getPlaylistNo()) {
-//            selecteAllMusic
-//        }
+        if(chooseplaylistNo == playlist.getPlaylistNo()) {
+            selecteAllMusic
+        }
 
     }
 }

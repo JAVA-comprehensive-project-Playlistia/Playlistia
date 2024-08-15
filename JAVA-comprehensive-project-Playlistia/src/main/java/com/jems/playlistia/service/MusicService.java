@@ -40,6 +40,6 @@ public class MusicService {
         for (Playlist playlist : showPlaylist) {
             System.out.println("music = " + playlist);
         }
-
+        playlistRepository.selectPlaylist();
     }
 }
