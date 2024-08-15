@@ -18,6 +18,14 @@ public class Playlist implements Serializable {
         this.totalDuration = totalDuration;
     }
 
+    public int getPlaylistNo() {
+        return playlistNo;
+    }
+
+    public void setPlaylistNo(int playlistNo) {
+        this.playlistNo = playlistNo;
+    }
+
     public String getName() {
         return name;
     }
@@ -46,7 +54,8 @@ public class Playlist implements Serializable {
     @Override
     public String toString() {
         return "Playlist{" +
-                "name='" + name + '\'' +
+                "playlistNo=" + playlistNo +
+                ", name='" + name + '\'' +
                 ", totalNum=" + totalNum +
                 ", totalDuration=" + totalDuration +
                 '}';
@@ -57,11 +66,11 @@ public class Playlist implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Playlist playlist = (Playlist) o;
-        return totalNum == playlist.totalNum && totalDuration == playlist.totalDuration && Objects.equals(name, playlist.name);
+        return playlistNo == playlist.playlistNo && totalNum == playlist.totalNum && totalDuration == playlist.totalDuration && Objects.equals(name, playlist.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, totalNum, totalDuration);
+        return Objects.hash(playlistNo, name, totalNum, totalDuration);
     }
 }
