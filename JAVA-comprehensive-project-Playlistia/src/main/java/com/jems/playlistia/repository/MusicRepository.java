@@ -5,6 +5,7 @@ import com.jems.playlistia.Aggregate.Music;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class MusicRepository {
     private final ArrayList<Music> musicList = new ArrayList<>();
@@ -36,6 +37,41 @@ public class MusicRepository {
                     new String[] {"Ed Sheeran", "Steve Mac", "Johnny McDaid"},
                     new String[] {"Ed Sheeran", "Steve Mac", "Johnny McDaid"},
                     "Pop", "÷ (Divide)", "Ed Sheeran", 233));
+
+            music.add(new Music(4, "봄날", "보고 싶다...",
+                    new String[]{"RM", "Suga", "Adora", "Hitman Bang", "Arlissa Ruppert"},
+                    new String[]{"Pdogg", "RM", "Suga", "Adora"},
+                    "K-pop, Ballad", "YOU NEVER WALK ALONE", "BTS", 274));
+
+            music.add(new Music(5, "Blinding Lights", "I've been tryna call...",
+                    new String[]{"Abel Tesfaye", "Ahmad Balshe", "Jason Quenneville", "Max Martin", "Oscar Holter"},
+                    new String[]{"Max Martin", "Oscar Holter", "The Weeknd"},
+                    "Synthwave, Pop", "After Hours", "The Weeknd", 200));
+
+            music.add(new Music(6, "가을 아침", "산촌에...",
+                    new String[]{"Lee Mi-ja"},
+                    new String[]{"Lee Mi-ja"},
+                    "Folk", "꽃, 바람 그리고 당신", "IU", 213));
+
+            music.add(new Music(7, "Bad Guy", "So you're a tough guy, like it really rough guy...",
+                    new String[]{"Billie Eilish", "Finneas O'Connell"},
+                    new String[]{"Finneas O'Connell"},
+                    "Electropop", "When We All Fall Asleep, Where Do We Go?", "Billie Eilish", 194));
+
+            music.add(new Music(8, "Bad Guy", "So you're a tough guy, like it really rough guy...",
+                    new String[]{"Billie Eilish", "Finneas O'Connell"},
+                    new String[]{"Finneas O'Connell"},
+                    "Electropop", "When We All Fall Asleep, Where Do We Go?", "Billie Eilish", 194));
+
+            music.add(new Music(9, "Celebrity", "Oh hey, ya 어두운 밤이 날 가두기 전에...",
+                    new String[]{"IU", "Lee Chan-hyuk"},
+                    new String[]{"Ryan S. Jhun", "Jeong Seung-hwan", "KIM SHIN HYE"},
+                    "K-pop", "LILAC", "IU", 210));
+
+            music.add(new Music(10, "Someone Like You", "I heard that you're settled down...",
+                    new String[]{"Adele", "Dan Wilson"},
+                    new String[]{"Adele", "Dan Wilson"},
+                    "Soul", "21", "Adele", 285));
 
             saveMusics(file, music);    // 파일에 music 객체들을 저장
         }
@@ -79,5 +115,18 @@ public class MusicRepository {
             }
         }
         return null;    // 해당 번호의 노래가 없을 경우 null 반환
+    }
+
+    public void originalMusicList() {
+        ArrayList<Music> musics = new ArrayList<>(musicList);
+
+        suffleMusic();
+
+        musicList.clear();
+        musics.addAll(musicList);
+    }
+
+    public void suffleMusic() {
+        Collections.shuffle(musicList);
     }
 }

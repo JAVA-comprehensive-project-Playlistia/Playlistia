@@ -7,6 +7,7 @@ import com.jems.playlistia.stream.MyObjectOutputStream;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class QueueRepository {
     private final ArrayList<Queue> queueList = new ArrayList<>();
@@ -15,15 +16,35 @@ public class QueueRepository {
     public ArrayList<Queue> selectAllQueueMusic() {
         return queueList;
     }
+
     public QueueRepository() {
         File file = new File(FILE_PATH);
 
         if (!file.exists()) {
             ArrayList<Queue> queue = new ArrayList<>();
             queue.add(new Queue(1, "Dynamite", "Cause I-I-I'm in the stars tonight...",
-                    new String[] {"Jessica Agombar", "David Stewart"},
-                    new String[] {"Jessica Agombar", "David Stewart"},
+                    new String[]{"Jessica Agombar", "David Stewart"},
+                    new String[]{"Jessica Agombar", "David Stewart"},
                     "Pop", "BE", "BTS", 199));
+            queue.add(new Queue(2, "사랑에 연습이 있었다면", "사랑에 연습이 있었다면...",
+                    new String[] {"Jukjae"},
+                    new String[] {"Jukjae"},
+                    "Ballad", "이해", "Jukjae", 253));
+
+            queue.add(new Queue(3, "Shape of You", "The club isn't the best place to find a lover...",
+                    new String[] {"Ed Sheeran", "Steve Mac", "Johnny McDaid"},
+                    new String[] {"Ed Sheeran", "Steve Mac", "Johnny McDaid"},
+                    "Pop", "÷ (Divide)", "Ed Sheeran", 233));
+
+            queue.add(new Queue(4, "봄날", "보고 싶다...",
+                    new String[]{"RM", "Suga", "Adora", "Hitman Bang", "Arlissa Ruppert"},
+                    new String[]{"Pdogg", "RM", "Suga", "Adora"},
+                    "K-pop, Ballad", "YOU NEVER WALK ALONE", "BTS", 274));
+
+            queue.add(new Queue(5, "Blinding Lights", "I've been tryna call...",
+                    new String[]{"Abel Tesfaye", "Ahmad Balshe", "Jason Quenneville", "Max Martin", "Oscar Holter"},
+                    new String[]{"Max Martin", "Oscar Holter", "The Weeknd"},
+                    "Synthwave, Pop", "After Hours", "The Weeknd", 200));
 
             saveQueue(file, queue); // 파일에 queue 객체 저장
         }
@@ -45,31 +66,42 @@ public class QueueRepository {
     }
 
     private void saveQueue(File file, ArrayList<Queue> queueList) {
-        try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
 
             for (Queue q : queueList) {
                 oos.writeObject(q);
             }
 
-        }  catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Queue findQueueByNo(int musicNo) {
+        for (Queue queue : queueList) {
+            // 노래 번호와 일치하는 queue 객체를 반환
+            if (queue.getMusicNo() == musicNo) {
+                return queue;
+            }
+        }
+        return null;
     }
 
     // 재생목록 번호 != 노래 번호
     // 재생목록에서는 재생목록 번호만 보이고 노래 번호는 안 보임
 
-    // 재생 목록의
+    // 재생 목록의 마지막 번호 가져오기
     public int selectLastQueueNo() {
 
-        Queue lastqueue = queueList.get(queueList.size()-1);
+        Queue lastqueue = queueList.get(queueList.size() - 1);
         return lastqueue.getMusicNo();
 
     }
-    public int addQueueList (Queue queue) {
+
+    public int addQueueList(Queue queue) {
         int result = 0;
 
-        try(MyObjectOutputStream moos = new MyObjectOutputStream(new FileOutputStream(FILE_PATH, true))) {
+        try (MyObjectOutputStream moos = new MyObjectOutputStream(new FileOutputStream(FILE_PATH, true))) {
             moos.writeObject(queue);
             queueList.add(queue);
             result = 1;
@@ -81,4 +113,48 @@ public class QueueRepository {
         return result;
     }
 
+    public int deleteQueueMusic(int selectMusicNo) {
+        for (int i = 0; i < queueList.size(); i++) {
+            if (queueList.get(i).getMusicNo() == selectMusicNo) {
+                queueList.remove(i);
+
+                File file = new File(FILE_PATH);
+                saveQueue(file, queueList);
+
+                return 1;
+            }
+        }
+        return 0;
+    }
+
+    public void originalQueueList() {
+        ArrayList<Queue> queues = new ArrayList<>(queueList);
+
+        suffleQueue();
+
+        queueList.clear();
+        queues.addAll(queueList);
+    }
+
+    public void suffleQueue() {
+        Collections.shuffle(queueList);
+    }
+
+    public void changeOrderQueue(int index) {
+        if(index < 0 || index >= queueList.size()) {
+            System.out.println("입력하신 음악 번호는 없습니다.");
+            return;
+        }
+
+        int newIndex = index + 2; // 두 칸 뒤로 이동할 인덱스
+
+        if(newIndex >= queueList.size()) {
+            newIndex = queueList.size() - 1; // 범위를 벗어날 경우 마지막 위치로
+        }
+
+        if(index != newIndex) {
+            Queue songToChange = queueList.remove(index); // 기존위치에서 요소 제거
+            queueList.add(newIndex, songToChange);
+        }
+    }
 }
