@@ -6,6 +6,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Scanner;
 
 public class MusicRepository {
     private final ArrayList<Music> musicList = new ArrayList<>();
@@ -128,5 +129,9 @@ public class MusicRepository {
 
     public void suffleMusic() {
         Collections.shuffle(musicList);
+
+        for(Music music : musicList) {
+            System.out.println(music.toString());
+        }
     }
 }

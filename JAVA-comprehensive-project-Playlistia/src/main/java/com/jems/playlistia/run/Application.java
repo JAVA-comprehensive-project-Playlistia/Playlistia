@@ -65,7 +65,6 @@ public class Application {
                     musicService.findAllMusicInPlaylist(selectedPlaylistNo);
 
                     break;
-
                 case 9:
                     System.out.println("플레이리스티아를 종료합니다. 또 만나요!");
                     return;
@@ -127,7 +126,6 @@ public class Application {
         selectedMenuNo = sc.nextInt();
         return selectedMenuNo;
     }
-
 
     // Music 객체를 받아 해당 노래의 이름 가져오기
     private static void playMusic(Music music) {
@@ -192,13 +190,12 @@ public class Application {
 
             } else if (menuNo1 == 4) {  // 4. 플레이리스트에 추가
                 return;
-            } else if (menuNo1 == 5) {
+            } else if (menuNo1 == 5) { // 5. 나가기
               return;
             } else {
                 System.out.println(" 메뉴 번호를 잘못 입력했습니다.");
             }
         }
-
     }
 
     private static int showQueueMenu1() {
@@ -227,7 +224,6 @@ public class Application {
         selectedMenuNo = sc.nextInt();
         return selectedMenuNo;
     }
-
 
     private static void playQueue(Queue queue) {
         System.out.println(queue.getName() + " 를 선택했습니다.");
@@ -317,7 +313,7 @@ public class Application {
                 System.out.println("순서변경이 완료되었습니다.");
                 return;
 
-            } else if (menuNo1 == 7) {
+            } else if (menuNo1 == 7) { // 7. 나가기
                 return;
             } else {
                 System.out.println(" 메뉴 번호를 잘못 입력했습니다.");

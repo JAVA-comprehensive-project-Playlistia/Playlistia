@@ -138,6 +138,10 @@ public class QueueRepository {
 
     public void suffleQueue() {
         Collections.shuffle(queueList);
+        // 셔플된 상태 확인
+        for(Queue queue : queueList) {
+            System.out.println(queue.toString());
+        }
     }
 
     public void changeOrderQueue(int index) {
@@ -168,7 +172,6 @@ public class QueueRepository {
         } else {
             System.out.println(queueList.get(index).getName() + "의 노래가 재생됩니다.");
         }
-
     }
 
     // 다음 노래 재생
