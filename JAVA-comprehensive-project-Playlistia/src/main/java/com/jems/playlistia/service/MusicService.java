@@ -56,7 +56,8 @@ public class MusicService {
         }
     }
 
-    public void registQueue(int selectMusicNo) {
+    // 작동은 하는데 노래 객체가 넘어가진 않음
+    public void registQueue(int selectedMusicNo) {
 
         Music music = new Music();
         Queue queue = new Queue();
@@ -81,4 +82,5 @@ public class MusicService {
             System.out.println("입력하신 노래 번호가 없습니다.");
         }
     }
+
 }

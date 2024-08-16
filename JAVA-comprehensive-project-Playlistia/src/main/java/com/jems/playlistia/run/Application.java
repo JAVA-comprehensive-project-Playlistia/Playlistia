@@ -111,6 +111,7 @@ public class Application {
         System.out.println("2. 셔플 재생");
         System.out.println("3. 재생목록에 추가");
         System.out.println("4. 플레이리스트에 추가");
+        System.out.println("5. 나가기");
         System.out.print("메뉴 번호 : ");
         selectedMenuNo = sc.nextInt();
         return selectedMenuNo;
@@ -149,7 +150,7 @@ public class Application {
                     if(answer.equalsIgnoreCase("y")) {
                         System.out.println(music.getName() + " 재생 중~");
                     } else {
-                        System.out.println("잘못된 입력입니다.");
+                        return;
                     }
 
                 } else if (menuNo2 == 2) { // 2. 나가기
@@ -171,7 +172,7 @@ public class Application {
                     if (answer.equalsIgnoreCase("y")) {
                         System.out.println(music.getName() + " 재생 중~");
                     } else {
-                        System.out.println("잘못된 입력입니다.");
+                        return;
                     }
                 }
 
@@ -179,7 +180,9 @@ public class Application {
                 // 선택한 음악이 재생목록에 없으면 추가하고싶은데 어떤 식으로 작성해야할지 모르겠음.
                 // selectedMusicNo != queue.getMusicNo() 이런식으로 하면 될것같은데
                 // 그럼 Queue queue = new Queue();를 생성해야하나...?
-                if(selectedMusicNo != music.getMusicNo()) {
+                Queue queue = new Queue();
+
+                if(selectedMusicNo != queue.getMusicNo()) {
                     musicService.registQueue(selectedMusicNo);
                     return;
                 } else {
@@ -189,7 +192,9 @@ public class Application {
 
             } else if (menuNo1 == 4) {  // 4. 플레이리스트에 추가
                 return;
-            }else {
+            } else if (menuNo1 == 5) {
+              return;
+            } else {
                 System.out.println(" 메뉴 번호를 잘못 입력했습니다.");
             }
         }
@@ -200,10 +205,13 @@ public class Application {
         Scanner sc = new Scanner(System.in);
         int selectedMenuNo = 0;
         System.out.println("=====원하는 메뉴 번호를 선택하세요.=====");
-        System.out.println("1. 노래 재생");
-        System.out.println("2. 셔플 재생");
-        System.out.println("3. 노래 삭제");
-        System.out.println("4. 순서 변경");
+        System.out.println("1. 이전 노래 재생");
+        System.out.println("2. 노래 재생");
+        System.out.println("3. 다음 노래 재생");
+        System.out.println("4. 셔플 재생");
+        System.out.println("5. 노래 삭제");
+        System.out.println("6. 순서 변경");
+        System.out.println("7. 나가기");
         System.out.print("메뉴 번호 : ");
         selectedMenuNo = sc.nextInt();
         return selectedMenuNo;
@@ -228,8 +236,25 @@ public class Application {
 
         while (true) {
             int menuNo1 = showQueueMenu1();   // 노래 재생 후 추가 메뉴 선택 받기
+            if (menuNo1 == 1) {  // 1. 이전 노래 재생
+                queueRepository.backQueue(selectedMusicNo);
 
-            if (menuNo1 == 1) {  // 1. 노래 재생
+                int menuNo2 = showQueueMenu2();
+                if (menuNo2 == 1) { // 1. 노래 멈춤
+                    System.out.println(queue.getName() + " 의 노래 멈춤");
+                    // 다시 재생할지
+                    System.out.println("다시 재생하겠습니까? (y/Y) : ");
+                    String answer = sc.nextLine();
+                    if (answer.equalsIgnoreCase("y")) {
+                        System.out.println(queue.getName() + " 재생 중~");
+                    } else {
+                        return;
+                    }
+
+                } else if (menuNo2 == 2) { // 2. 나가기
+                    return;
+                }
+            } else if (menuNo1 == 2) {  // 2. 노래 재생
                 System.out.println(queue.getName() + " 이 재생");
 
                 int menuNo2 = showQueueMenu2();
@@ -241,13 +266,31 @@ public class Application {
                     if (answer.equalsIgnoreCase("y")) {
                         System.out.println(queue.getName() + " 재생 중~");
                     } else {
-                        System.out.println("잘못된 입력입니다.");
+                        return;
                     }
 
                 } else if (menuNo2 == 2) { // 2. 나가기
                     return;
                 }
-            } else if (menuNo1 == 2) {   // 2. 셔플 재생
+            } else if (menuNo1 == 3) {  // 3. 다음 노래 재생
+                queueRepository.fowardQueue(selectedMusicNo);
+
+                int menuNo2 = showQueueMenu2();
+                if (menuNo2 == 1) { // 1. 노래 멈춤
+                    System.out.println(queue.getName() + " 의 노래 멈춤");
+                    // 다시 재생할지
+                    System.out.println("다시 재생하겠습니까? (y/Y) : ");
+                    String answer = sc.nextLine();
+                    if (answer.equalsIgnoreCase("y")) {
+                        System.out.println(queue.getName() + " 재생 중~");
+                    } else {
+                        return;
+                    }
+
+                } else if (menuNo2 == 2) { // 2. 나가기
+                    return;
+                }
+            } else if (menuNo1 == 4) {   // 4. 셔플 재생
                 queueRepository.originalQueueList();
                 System.out.println(queue.getName() + " 이 재생");
 
@@ -260,19 +303,22 @@ public class Application {
                     if (answer.equalsIgnoreCase("y")) {
                         System.out.println(queue.getName() + " 재생 중~");
                     } else {
-                        System.out.println("잘못된 입력입니다.");
+                        return;
                     }
                 }
-            }else if (menuNo1 == 3) {   // 3. 노래 삭제
+            }else if (menuNo1 == 5) {   // 5. 노래 삭제
                 musicService.removeQueueMusic(selectedMusicNo);
                 musicService.showAllQueue();
+                return;
 
-            } else if (menuNo1 == 4) {  // 4. 순서 변경
+            } else if (menuNo1 == 6) {  // 6. 순서 변경
                 int changeNum = selectedMusicNo - 1; // 인덱스로 바꿔줘기
                 queueRepository.changeOrderQueue(changeNum); // 순서변경이 안됨.
                 System.out.println("순서변경이 완료되었습니다.");
-                musicService.showAllQueue();
+                return;
 
+            } else if (menuNo1 == 7) {
+                return;
             } else {
                 System.out.println(" 메뉴 번호를 잘못 입력했습니다.");
             }

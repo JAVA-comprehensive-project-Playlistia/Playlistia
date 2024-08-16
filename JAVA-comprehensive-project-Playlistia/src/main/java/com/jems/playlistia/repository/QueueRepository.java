@@ -13,10 +13,6 @@ public class QueueRepository {
     private final ArrayList<Queue> queueList = new ArrayList<>();
     private static final String FILE_PATH = "src/main/java/com/jems/playlistia/db/Queue.dat";
 
-    public ArrayList<Queue> selectAllQueueMusic() {
-        return queueList;
-    }
-
     public QueueRepository() {
         File file = new File(FILE_PATH);
 
@@ -98,6 +94,10 @@ public class QueueRepository {
 
     }
 
+    public ArrayList<Queue> selectAllQueueMusic() {
+        return queueList;
+    }
+
     public int addQueueList(Queue queue) {
         int result = 0;
 
@@ -141,20 +141,43 @@ public class QueueRepository {
     }
 
     public void changeOrderQueue(int index) {
-        if(index < 0 || index >= queueList.size()) {
+        if(index < 0 || index > queueList.size()) {
             System.out.println("입력하신 음악 번호는 없습니다.");
             return;
         }
 
         int newIndex = index + 2; // 두 칸 뒤로 이동할 인덱스
 
-        if(newIndex >= queueList.size()) {
+        if(newIndex > queueList.size()) {
             newIndex = queueList.size() - 1; // 범위를 벗어날 경우 마지막 위치로
         }
 
         if(index != newIndex) {
             Queue songToChange = queueList.remove(index); // 기존위치에서 요소 제거
             queueList.add(newIndex, songToChange);
+        }
+        for(Queue queue : queueList) {
+            System.out.println(queue.toString());
+        }
+    }
+    // 이전 노래 재생
+    public void backQueue(int selectMusicNo) {
+        int index = selectMusicNo - 2;
+        if(index < 0) {
+            System.out.println("이전 노래가 없습니다.");
+        } else {
+            System.out.println(queueList.get(index).getName() + "의 노래가 재생됩니다.");
+        }
+
+    }
+
+    // 다음 노래 재생
+    public void fowardQueue(int selectMusicNo) {
+        int index = selectMusicNo - 1;
+        if(index > queueList.size() - 1) {
+            System.out.println("다음 노래가 없습니다.");
+        } else {
+            System.out.println(queueList.get(index + 1).getName() + "의 노래가 재생됩니다.");
         }
     }
 }
