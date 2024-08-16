@@ -145,7 +145,7 @@ public class Application {
                 if (menuNo2 == 1) { // 1. 노래 멈춤
                     System.out.println(music.getName() + " 의 노래 멈춤");
                     // 다시 재생할지
-                    System.out.println("다시 재생하겠습니까? (y/Y) : ");
+                    System.out.print("다시 재생하겠습니까? (y/Y) : ");
                     String answer = sc.nextLine();
                     if(answer.equalsIgnoreCase("y")) {
                         System.out.println(music.getName() + " 재생 중~");
@@ -167,7 +167,7 @@ public class Application {
                 if (menuNo2 == 1) { // 1. 노래 멈춤
                     System.out.println(music.getName() + " 의 노래 멈춤");
                     // 다시 재생할지
-                    System.out.println("다시 재생하겠습니까? (y/Y) : ");
+                    System.out.print("다시 재생하겠습니까? (y/Y) : ");
                     String answer = sc.nextLine();
                     if (answer.equalsIgnoreCase("y")) {
                         System.out.println(music.getName() + " 재생 중~");
@@ -243,7 +243,7 @@ public class Application {
                 if (menuNo2 == 1) { // 1. 노래 멈춤
                     System.out.println(queue.getName() + " 의 노래 멈춤");
                     // 다시 재생할지
-                    System.out.println("다시 재생하겠습니까? (y/Y) : ");
+                    System.out.print("다시 재생하겠습니까? (y/Y) : ");
                     String answer = sc.nextLine();
                     if (answer.equalsIgnoreCase("y")) {
                         System.out.println(queue.getName() + " 재생 중~");
@@ -261,7 +261,7 @@ public class Application {
                 if (menuNo2 == 1) { // 1. 노래 멈춤
                     System.out.println(queue.getName() + " 의 노래 멈춤");
                     // 다시 재생할지
-                    System.out.println("다시 재생하겠습니까? (y/Y) : ");
+                    System.out.print("다시 재생하겠습니까? (y/Y) : ");
                     String answer = sc.nextLine();
                     if (answer.equalsIgnoreCase("y")) {
                         System.out.println(queue.getName() + " 재생 중~");
@@ -279,7 +279,7 @@ public class Application {
                 if (menuNo2 == 1) { // 1. 노래 멈춤
                     System.out.println(queue.getName() + " 의 노래 멈춤");
                     // 다시 재생할지
-                    System.out.println("다시 재생하겠습니까? (y/Y) : ");
+                    System.out.print("다시 재생하겠습니까? (y/Y) : ");
                     String answer = sc.nextLine();
                     if (answer.equalsIgnoreCase("y")) {
                         System.out.println(queue.getName() + " 재생 중~");
@@ -298,7 +298,7 @@ public class Application {
                 if (menuNo2 == 1) { // 1. 노래 멈춤
                     System.out.println(queue.getName() + " 의 노래 멈춤");
                     // 다시 재생할지
-                    System.out.println("다시 재생하겠습니까? (y/Y) : ");
+                    System.out.print("다시 재생하겠습니까? (y/Y) : ");
                     String answer = sc.nextLine();
                     if (answer.equalsIgnoreCase("y")) {
                         System.out.println(queue.getName() + " 재생 중~");
