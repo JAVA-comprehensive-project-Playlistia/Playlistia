@@ -1,7 +1,5 @@
 package com.jems.playlistia.repository;
 
-
-import com.jems.playlistia.Aggregate.Music;
 import com.jems.playlistia.Aggregate.Queue;
 import com.jems.playlistia.stream.MyObjectOutputStream;
 
@@ -183,4 +181,5 @@ public class QueueRepository {
             System.out.println(queueList.get(index + 1).getName() + "의 노래가 재생됩니다.");
         }
     }
+
 }
