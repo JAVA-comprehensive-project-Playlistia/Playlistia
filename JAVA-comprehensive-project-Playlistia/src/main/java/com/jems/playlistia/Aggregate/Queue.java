@@ -137,8 +137,6 @@ public class Queue implements Serializable {
                 ", albumName='" + albumName + '\'' +
                 ", singer='" + singer + '\'' +
                 ", duration=" + duration +
-                ", totalNum=" + totalNum +
-                ", totalDuration=" + totalDuration +
                 '}';
     }
 
