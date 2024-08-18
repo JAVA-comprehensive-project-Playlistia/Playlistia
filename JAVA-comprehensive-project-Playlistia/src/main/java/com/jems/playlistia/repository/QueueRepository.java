@@ -177,7 +177,7 @@ public class QueueRepository {
     // 다음 노래 재생
     public void fowardQueue(int selectMusicNo) {
         int index = selectMusicNo - 1;
-        if(index > queueList.size() - 1) {
+        if(index >= queueList.size() - 1) {
             System.out.println("다음 노래가 없습니다.");
         } else {
             System.out.println(queueList.get(index + 1).getName() + "의 노래가 재생됩니다.");
