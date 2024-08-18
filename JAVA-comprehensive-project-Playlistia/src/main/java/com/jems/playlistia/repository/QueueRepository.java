@@ -12,6 +12,17 @@ public class QueueRepository {
     private final ArrayList<Queue> queueList = new ArrayList<>();
     private static final String FILE_PATH = "src/main/java/com/jems/playlistia/db/Queue.dat";
 
+    public Queue findQueuebyNo(int selectedMusicNo) {
+        for (Queue queue : queueList) {
+            // 노래 번호와 일치하는 queue 객체를 반환
+            if (queue.getMusicNo() == selectedMusicNo) {
+                System.out.println("findQueuebyNo의 반환값: " + queue);
+                return queue;
+            }
+        }
+        return null;
+    }
+
     public ArrayList<Queue> selectAllQueueMusic() {
         return queueList;
     }
@@ -33,8 +44,10 @@ public class QueueRepository {
     private void loadQueue(File file) {
 
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+
             while (true) {
                 queueList.add((Queue) ois.readObject());    // Obejct -> Queue
+                System.out.println("파일에서 읽은 객체 : " + (Queue) ois.readObject());
             }
 
         } catch (EOFException e) {
@@ -67,18 +80,61 @@ public class QueueRepository {
 
     }
     public int addQueueList (Queue queue) {
+        System.out.println("addQueueList 실행");
         int result = 0;
+
+        // 디버깅용
+        printMemoryContents();
+        printFileContents();
+        System.out.println("파일에 추가할 객체 " + queue);  // 여기서 이미 null임
 
         try(MyObjectOutputStream moos = new MyObjectOutputStream(new FileOutputStream(FILE_PATH, true))) {
             moos.writeObject(queue);
             queueList.add(queue);
             result = 1;
 
+            // 디버깅용
+            printMemoryContents();
+            printFileContents();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
+        System.out.println("addQueueList 종료");
         return result;
     }
+
+    // 디버깅용
+    private void printMemoryContents() {
+        System.out.println("=== 메모리에 저장된 Queue 객체들 ===");
+        for (Queue queue : queueList) {
+            System.out.println(queue);
+        }
+    }
+
+    private void printFileContents() {
+        System.out.println("=== 파일에 저장된 Queue 객체들 ===");
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
+            while (true) {
+                Queue queue = (Queue) ois.readObject();
+                System.out.println(queue);
+            }
+        } catch (EOFException e) {
+            System.out.println("파일 끝에 도달했습니다.");
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void totalNum_totalDuration() {
+        int totalNum = queueList.size();
+        int totalDuration = 0;
+
+        for (Queue queue : queueList) {
+            totalDuration += queue.getDuration();
+        }
+    }
+
 
 }

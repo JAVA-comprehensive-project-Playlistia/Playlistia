@@ -2,6 +2,7 @@ package com.jems.playlistia.repository;
 
 import com.jems.playlistia.Aggregate.Music;
 import com.jems.playlistia.Aggregate.Playlist;
+import com.jems.playlistia.stream.MyObjectOutputStream;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -94,43 +95,33 @@ public class PlaylistRepository {
         return new ArrayList<>(); // 플리가 없을 경우 일단 빈 리스트 반환...
     }
 
-    // 플레이리스트 내용 디버깅용 메소드
-    public void printPlaylists() {
-        for (Playlist playlist : playlistList) {
-            System.out.println("Playlist No: " + playlist.getPlaylistNo());
-            System.out.println("Playlist Name: " + playlist.getName());
-            System.out.println("Music List: ");
-            for (Music music : playlist.getMusicList()) {
-                System.out.println("  - " + music.getName() + " by " + music.getSinger());
-            }
-            System.out.println();
-        }
-    }
+    public int addPlaylistList(Playlist playlist) {
+        System.out.println("addPlaylistList 실행: ");
+        int result  = 0;
 
-    public void addMusicToPlaylist(Music music, int playlistNo) {
+        Playlist currPlaylist = findPlaylistByNo(playlist.getPlaylistNo());
 
-        Playlist playlist = findPlaylistByNo(playlistNo);
-        if (playlist == null) {
-            System.out.println("해당 번호의 플레이리스트가 없습니다.");
-            return;
+
+
+        if (currPlaylist != null) {
+            // 기존 플레이리스트가 있으면 음악 추가
+            currPlaylist.getMusicList().addAll(playlist.getMusicList());
+            currPlaylist.setTotalNum(currPlaylist.getTotalNum() + playlist.getMusicList().size());
+            currPlaylist.setTotalDuration(currPlaylist.getTotalDuration() + playlist.getMusicList().stream().mapToInt(Music::getDuration).sum());
+        } else {
+            // 플레이리스트가 없으면 새 플레이리스트 추가
+            playlistList.add(playlist);
         }
 
-        // 파일에 추가
-        playlist.addMusic(music);
-        System.out.println(music.getName() + " 이(가)" + playlist.getName() + " 에 추가되었습니다.");
+        try (MyObjectOutputStream moos = new MyObjectOutputStream(new FileOutputStream(FILE_PATH, true))) {
+            moos.writeObject(playlist);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+//        savePlaylists(new File(FILE_PATH), playlistList);
 
-
-//        ArrayList<Playlist> playlists = selectAllPlaylist();
-//        File file = new File((FILE_PATH));
-//        savePlaylists(file, playlists);
-
-        System.out.println("저장 후 플레이리스트: ");
-        printPlaylists();
-        // 프로그램 종료 후 재실행해야 플레이리스트에 추가된 음악이 보이는 문제...
-
-        //플레이리스트가 업데이트 된 playlist 객체를 참조하는 지 확인
-        savePlaylists(new File(FILE_PATH), selectAllPlaylist());
-
+        return 1;
     }
+
 
 }

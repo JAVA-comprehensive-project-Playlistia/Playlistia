@@ -49,17 +49,6 @@ public class MusicService {
             System.out.println(music.getName() + " - " + music.getSinger());
         }
 
-//        ArrayList<Music> musicList = playlistRepository.selectedAllMusicInPlaylist(playlistNo);
-//        // 플레이리스트의 모든 음악을 musicList 배열에 넣기
-//
-//        if (musicList == null | musicList.isEmpty()) {
-//            System.out.println("선택하신 플레이리스트가 비어있습니다.");
-//        } else {
-//            for (Music music : musicList) {
-//                System.out.println("music = " + music);
-//            }
-//        }
-
     }
 
 
@@ -72,26 +61,77 @@ public class MusicService {
         }
     }
 
+    // music 객체를 playlist에 넣는 메소드
+    public void musicToPlaylist(int musicNo, int playlistNo) {
+
+        // 사용자가 선택한 노래 찾기
+        Music music = musicRepository.findMusicByNo(musicNo);
+        if (music == null) {
+            System.out.println("해당 번호의 음악이 없습니다.");
+            return;
+        }
+
+        Playlist playlist = playlistRepository.findPlaylistByNo(playlistNo);
+        if (playlist == null) {
+            playlist = new Playlist(playlistNo, "새 플레이리스트", 0, 0, new ArrayList<>());
+        }
+
+        // 플레이리스트에 노래 추가
+        playlist.getMusicList().add(music);
+        playlist.addMusic(music);
+
+        // 플레이리스트 목록 업데이트
+        playlistRepository.addPlaylistList(playlist);
+
+
+        System.out.println(music.getName() + " 을(를) 플레이리스트에 추가했습니다.");
+
+    }
+
     public void registQueue(int musicNo) {
 
-        Music music = new Music();
         Queue queue = new Queue();
 
+        Music music = musicRepository.findMusicByNo(musicNo);
+        if (music == null) {
+            System.out.println("해당 번호의 음악이 없습니다");
+        }
+
+        // 재생목록 번호 3번 설정
         int lastQueueNo = queueRepository.selectLastQueueNo();
         queue.setMusicNo(lastQueueNo + 1);
 
+
+        // 사용자가 선택한 Music 객체 정보를 재생목록에 넣기
+        queue.setName(music.getName());
+        queue.setLyrics(music.getLyrics());
+        queue.setLyricsWriter(music.getLyricsWriter());
+        queue.setComposer(music.getComposer());
+        queue.setGenre(music.getGenre());
+        queue.setAlbumName(music.getAlbumName());
+        queue.setSinger(music.getSinger());
+        queue.setDuration(music.getDuration());
+
+        // 현재 총 곡 수 + 1
+        int totalNum = queueRepository.selectAllQueueMusic().size() + 1;
+        int totalDuration = queueRepository.selectAllQueueMusic().stream()
+                .mapToInt(Queue::getDuration)
+                .sum() + music.getDuration();
+
+        // queue에 music 객체를 추가하지 않았기 때문에 여기서 이미 null이 들어감
+        System.out.println("queue " + queue);
+
         int result = queueRepository.addQueueList(queue);
+        System.out.println("result: " + result);
 
         if(result == 1) {
             System.out.println(music.getName() + "를 재생목록에 추가했습니다.");
         } else {
             System.out.println("입력하신 노래 번호가 없습니다.");
         }
+        System.out.println("registQueue 종료");
 
     }
-
-
-
 
 
 }

@@ -17,6 +17,7 @@ public class Application {
     private static final MusicRepository musicRepository = new MusicRepository();
     private static final PlaylistRepository playlistRepository = new PlaylistRepository();
     private static final MusicService musicService = new MusicService();
+    private static final QueueRepository queueRepository = new QueueRepository();
 
     private static int selectedMusicNo = 0;
 
@@ -47,8 +48,15 @@ public class Application {
                 case 2:
                     musicService.showAllQueue();
                     selectedMusicNo = chooseMusicNo();
+                    Queue selectedQueue = queueRepository.findQueuebyNo(selectedMusicNo);
 
-                    break;  // 1번과 유사하게
+                    if (selectedQueue != null) {
+                        playQueue(selectedQueue); // 비어있는데 작동함
+                    } else {
+                        System.out.println("재생목록이 비어있습니다.");
+                        return;
+                    }
+                    break;
                 case 3:
                     musicService.findAllPlaylist(); // 전체 플레이리스트 보여주기
 
@@ -138,11 +146,15 @@ public class Application {
                     break;
                 case 2:
                     System.out.println("재생 목록에 추가");
+                    System.out.println("selectedMusicNo: " + selectedMusicNo);
+                    musicService.registQueue(selectedMusicNo);
+
                     break;
                 case 3:
                     System.out.println("플레이리스트에 추가");
                     int playlistNo = choosePlaylistNo();    // 사용자로부터 플레이리스트 번호 입력받기
-                    playlistRepository.addMusicToPlaylist(music, playlistNo);
+                    System.out.println("사용자가 입력한 플레이리스트 번호(playlistNo): " + playlistNo);
+                    musicService.musicToPlaylist(selectedMusicNo, playlistNo);
 
                     break;
                 default:
@@ -151,6 +163,9 @@ public class Application {
             }
         }
 
+    }
+
+    private static void playQueue(Queue selectedQueue) {
     }
 
     private static void addQueue() {

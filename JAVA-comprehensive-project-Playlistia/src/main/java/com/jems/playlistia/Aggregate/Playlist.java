@@ -95,14 +95,12 @@ public class Playlist implements Serializable {
         return Objects.hash(playlistNo, name, totalNum, totalDuration, musicList);
     }
 
-
     public void addMusic(Music music) {
         if (musicList == null) {
             musicList = new ArrayList<>();
         }
         musicList.add(music);
-        totalDuration++;
-        totalDuration += music.getDuration();
-        System.out.println("totlaDuration: " + totalDuration);
+        totalNum = musicList.size(); // 곡 수 업데이트
+        totalDuration = musicList.stream().mapToInt(Music::getDuration).sum(); // 총 시간 업데이트
     }
 }
