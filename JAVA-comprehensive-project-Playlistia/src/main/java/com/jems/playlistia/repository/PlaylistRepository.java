@@ -2,6 +2,7 @@ package com.jems.playlistia.repository;
 
 import com.jems.playlistia.Aggregate.Music;
 import com.jems.playlistia.Aggregate.Playlist;
+import com.jems.playlistia.stream.MyObjectOutputStream;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -96,5 +97,30 @@ public class PlaylistRepository {
             return playlist.getMusicList(); // 플리의 musicList 반환
         }
         return new ArrayList<>(); // 플리가 없을 경우 일단 빈 리스트 반환...
+    }
+
+    public int addPlaylist(Playlist playlist) {
+        System.out.println("addPlaylist 실행");
+
+        // 메모리에 새 플레이리스트 추가
+        playlistList.add(playlist);
+
+        // 파일에 새 플레이리스트 저장
+        try (MyObjectOutputStream moos = new MyObjectOutputStream(new FileOutputStream(FILE_PATH, true))) {
+            moos.writeObject(playlist);
+            return 1; // 성공적으로 추가된 경우 1 반환
+        } catch (IOException e) {
+            throw new RuntimeException("파일에 플레이리스트를 추가하는 중 오류 발생", e);
+        }
+    }
+
+    public int deletePlaylist(int playlistNo) {
+        Playlist playlistToRemove = findPlaylistByNo(playlistNo);
+        if (playlistToRemove != null) {
+            playlistList.remove(playlistToRemove);
+            savePlaylists(new File(FILE_PATH), playlistList);
+            return 1; // 삭제 성공
+        }
+        return 0; // 삭제할 플레이리스트를 찾을 수 없는 경우
     }
 }
