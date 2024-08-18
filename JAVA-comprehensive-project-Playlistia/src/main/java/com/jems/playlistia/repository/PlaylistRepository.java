@@ -55,12 +55,12 @@ public class PlaylistRepository {
 
     public void loadPlaylists(File file) {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-
             while (true) {
-                playlistList.add((Playlist) ois.readObject());  // Object -> Music 타입으로 형 변환
+                Playlist playlist = (Playlist) ois.readObject();
+                playlistList.add(playlist);
             }
-
-        } catch (EOFException e) {  // 파일의 끝을 읽으면 곡 정보 모두 로드 완료
+        } catch (EOFException e) {
+            // 파일 끝에 도달한 경우
             System.out.println("노래 목록을 모두 로딩하였습니다.");
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -95,33 +95,67 @@ public class PlaylistRepository {
         return new ArrayList<>(); // 플리가 없을 경우 일단 빈 리스트 반환...
     }
 
-    public int addPlaylistList(Playlist playlist) {
-        System.out.println("addPlaylistList 실행: ");
-        int result  = 0;
+    // 새 플레이리스트 실행하는 메소드
+    public int addPlaylist(Playlist playlist) {
+        System.out.println("addPlaylist 실행");
 
-        Playlist currPlaylist = findPlaylistByNo(playlist.getPlaylistNo());
+        // 메모리에 새 플레이리스트 추가
+        playlistList.add(playlist);
 
-
-
-        if (currPlaylist != null) {
-            // 기존 플레이리스트가 있으면 음악 추가
-            currPlaylist.getMusicList().addAll(playlist.getMusicList());
-            currPlaylist.setTotalNum(currPlaylist.getTotalNum() + playlist.getMusicList().size());
-            currPlaylist.setTotalDuration(currPlaylist.getTotalDuration() + playlist.getMusicList().stream().mapToInt(Music::getDuration).sum());
-        } else {
-            // 플레이리스트가 없으면 새 플레이리스트 추가
-            playlistList.add(playlist);
-        }
-
+        // 파일에 새 플레이리스트 저장
         try (MyObjectOutputStream moos = new MyObjectOutputStream(new FileOutputStream(FILE_PATH, true))) {
             moos.writeObject(playlist);
+            return 1; // 성공적으로 추가된 경우 1 반환
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("파일에 플레이리스트를 추가하는 중 오류 발생", e);
         }
-//        savePlaylists(new File(FILE_PATH), playlistList);
-
-        return 1;
     }
 
 
+    public int addPlaylistList(Playlist playlist) {
+        System.out.println("addPlaylistList 실행");
+
+        int result = 0;
+
+        try {
+            // 플레이리스트가 메모리에 있는지 확인
+            Playlist currPlaylist = findPlaylistByNo(playlist.getPlaylistNo());
+
+            // 새로 추가된 플레이리스트의 음악과 총 개수 및 총 시간 업데이트
+            if (currPlaylist != null) {
+                currPlaylist.getMusicList().addAll(playlist.getMusicList());
+                currPlaylist.setTotalNum(currPlaylist.getTotalNum() + playlist.getMusicList().size());
+                currPlaylist.setTotalDuration(currPlaylist.getTotalDuration() + playlist.getMusicList().stream().mapToInt(Music::getDuration).sum());
+            } else {
+                playlistList.add(playlist);
+            }
+
+            // 플레이리스트를 파일에 추가
+            try (MyObjectOutputStream moos = new MyObjectOutputStream(new FileOutputStream(FILE_PATH, true))) {
+                if (currPlaylist != null) {
+                    moos.writeObject(currPlaylist);
+                } else {
+                    moos.writeObject(playlist);
+                }
+                result = 1; // 성공적으로 추가된 경우 1 반환
+            } catch (IOException e) {
+                throw new RuntimeException("파일에 플레이리스트를 추가하는 중 오류 발생", e);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("플레이리스트를 추가하는 중 오류 발생", e);
+        }
+
+        return result; // 성공 시 1 반환
+    }
+
+
+    public int deletePlaylist(int playlistNo) {
+        Playlist playlistToRemove = findPlaylistByNo(playlistNo);
+        if (playlistToRemove != null) {
+            playlistList.remove(playlistToRemove);
+            savePlaylists(new File(FILE_PATH), playlistList);
+            return 1; // 삭제 성공
+        }
+        return 0; // 삭제할 플레이리스트를 찾을 수 없는 경우
+    }
 }

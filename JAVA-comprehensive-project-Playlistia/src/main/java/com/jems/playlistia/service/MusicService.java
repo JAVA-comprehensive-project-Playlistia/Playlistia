@@ -134,4 +134,38 @@ public class MusicService {
     }
 
 
+    public void addPlaylist(String playlistName) {
+
+        ArrayList<Playlist> playlists = playlistRepository.selectAllPlaylist();
+
+        // 가장 높은 플레이리스트 번호 찾기
+        int maxPlaylistNo = playlists.stream()
+                .mapToInt(Playlist::getPlaylistNo)
+                .max()
+                .orElse(0);
+
+        int newPlaylistNo = maxPlaylistNo + 1;
+
+        Playlist newPlaylist = new Playlist(newPlaylistNo, playlistName, 0, 0, new ArrayList<>());
+
+        // 새 플레이리스트 추가
+        int result = playlistRepository.addPlaylist(newPlaylist);
+
+        if (result == 1) {
+            System.out.println("플레이리스트 '" + playlistName + "'이(가) 추가되었습니다.");
+        } else {
+            System.out.println("플레이리스트 추가에 실패했습니다.");
+        }
+
+    }
+
+    public void deletePlaylist(int playlistNo) {
+        int result = playlistRepository.deletePlaylist(playlistNo);
+
+        if (result == 1) {
+            System.out.println("플레이리스트 번호 " + playlistNo + "가 삭제되었습니다.");
+        } else {
+            System.out.println("플레이리스트 번호 " + playlistNo + "를 찾을 수 없습니다.");
+        }
+    }
 }

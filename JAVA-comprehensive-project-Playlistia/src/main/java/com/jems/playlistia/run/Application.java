@@ -31,6 +31,8 @@ public class Application {
             System.out.println("1. 전체 음악 보기");
             System.out.println("2. 재생 목록 보기");
             System.out.println("3. 플레이리스트 보기");
+            System.out.println("4. 플레이리스트 추가");
+            System.out.println("5. 플레이리스트 삭제");
             System.out.println("9. 플레이리스티아 나가기");
             System.out.print("메뉴 선택 : ");
             int choice = scanner.nextInt();
@@ -66,10 +68,23 @@ public class Application {
                     musicService.findAllMusicInPlaylist(selectedPlaylistNo);
 
                     break;
+                case 4:
+                    Scanner sc = new Scanner(System.in);
+                    System.out.print("새 플레이리스트의 이름을 입력하세요: ");
+                    String playlistName = sc.nextLine();
+                    musicService.addPlaylist(playlistName);
+                    break;
+                case 5:
+                    musicService.findAllPlaylist();  // 플레이리스트 보여주기
+
+                    Scanner sc2 = new Scanner(System.in);
+                    System.out.println("삭제하려는 플레이리스트의 번호를 입력하세요: ");
+                    int playlistNo = sc2.nextInt();
+                    musicService.deletePlaylist(playlistNo);
+                    break;
 
                 case 9:
                     System.out.println("플레이리스티아를 종료합니다. 또 만나요!");
-                    shutdown(); // 종료 시 데이터 저장
                     return;
                 default:
                     System.out.println("메뉴 번호를 잘못 입력했습니다.");
@@ -162,7 +177,6 @@ public class Application {
                     break;
             }
         }
-
     }
 
     private static void playQueue(Queue selectedQueue) {
@@ -176,11 +190,5 @@ public class Application {
         selectedMusicNo = sc.nextInt();
 
         musicService.registQueue(selectedMusicNo);
-    }
-
-    public static void shutdown() {
-        String FILE_PATH = "src/main/java/com/jems/playlistia/db/Playlist.dat";
-        playlistRepository.savePlaylists(new File((FILE_PATH)), playlistRepository.selectAllPlaylist());
-        System.out.println("플레이리스트가 저장되었습니다.");
     }
 }
