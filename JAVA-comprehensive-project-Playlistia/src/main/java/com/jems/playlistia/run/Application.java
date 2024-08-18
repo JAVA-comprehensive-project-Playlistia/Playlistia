@@ -204,7 +204,11 @@ public class Application {
                 }
 
             } else if (menuNo1 == 4) {  // 4. 플레이리스트에 추가
-                return;
+                System.out.println("플레이리스트에 추가");
+                int playlistNo = choosePlaylistNo();    // 사용자로부터 플레이리스트 번호 입력받기
+                System.out.println("사용자가 입력한 플레이리스트 번호(playlistNo): " + playlistNo);
+                musicService.musicToPlaylist(selectedMusicNo, playlistNo);
+                break;
             } else if (menuNo1 == 5) { // 5. 나가기
               return;
             } else {

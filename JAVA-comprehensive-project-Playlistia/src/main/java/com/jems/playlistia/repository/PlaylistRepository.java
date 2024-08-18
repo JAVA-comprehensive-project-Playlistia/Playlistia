@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class PlaylistRepository {
 
     private final ArrayList<Playlist> playlistList = new ArrayList<>();
+    private final MusicRepository musicRepository = new MusicRepository();
 
     private static final String FILE_PATH ="src/main/java/com/jems/playlistia/db/Playlist.dat";
 
@@ -67,16 +68,6 @@ public class PlaylistRepository {
         return playlistList;
     }
 
-    // 플레이리스트에 노래를 저장하는 메소드
-//    public void addMusicToPlaylist(int playlistNo, Music music) {
-//        // 사용자에게 입력 받은 노래 번호를 ArrayList에 넣기
-//        int idx = playlistNo - 1;
-//
-//        Playlist playlist = playlistList.get(idx);
-//        playlist.addMusic(music);
-//        savePlaylists(new File(FILE_PATH), playlistList);   // Plyalist.dat 파일에 노래를 추가한 새로운 플레이리스트 저장
-//    }
-
     // 특정 노래의 번호에 해당하는 Music 객체를 반환하는 메소드
     // MusicRepo
     public Playlist findPlaylistByNo(int playlistNo) {
@@ -123,4 +114,41 @@ public class PlaylistRepository {
         }
         return 0; // 삭제할 플레이리스트를 찾을 수 없는 경우
     }
+
+    public int addPlaylistList(Playlist playlist) {
+        System.out.println("addPlaylistList 실행");
+
+        int result = 0;
+
+        try {
+            // 플레이리스트가 메모리에 있는지 확인
+            Playlist currPlaylist = findPlaylistByNo(playlist.getPlaylistNo());
+
+            // 새로 추가된 플레이리스트의 음악과 총 개수 및 총 시간 업데이트
+            if (currPlaylist != null) {
+                currPlaylist.getMusicList().addAll(playlist.getMusicList());
+                currPlaylist.setTotalNum(currPlaylist.getTotalNum() + playlist.getMusicList().size());
+                currPlaylist.setTotalDuration(currPlaylist.getTotalDuration() + playlist.getMusicList().stream().mapToInt(Music::getDuration).sum());
+            } else {
+                playlistList.add(playlist);
+            }
+
+            // 플레이리스트를 파일에 추가
+            try (MyObjectOutputStream moos = new MyObjectOutputStream(new FileOutputStream(FILE_PATH, true))) {
+                if (currPlaylist != null) {
+                    moos.writeObject(currPlaylist);
+                } else {
+                    moos.writeObject(playlist);
+                }
+                result = 1; // 성공적으로 추가된 경우 1 반환
+            } catch (IOException e) {
+                throw new RuntimeException("파일에 플레이리스트를 추가하는 중 오류 발생", e);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("플레이리스트를 추가하는 중 오류 발생", e);
+        }
+
+        return result; // 성공 시 1 반환
+    }
+
 }

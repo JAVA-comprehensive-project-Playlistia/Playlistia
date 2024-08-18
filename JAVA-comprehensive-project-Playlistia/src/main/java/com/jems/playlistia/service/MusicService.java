@@ -14,6 +14,7 @@ public class MusicService {
     private final MusicRepository musicRepository = new MusicRepository();
     private final QueueRepository queueRepository = new QueueRepository();
     private final PlaylistRepository playlistRepository = new PlaylistRepository();
+
     public void findAllMusic() {
         ArrayList<Music> findMusic = musicRepository.selectAllMusic();
 
@@ -93,7 +94,7 @@ public class MusicService {
         int result = queueRepository.addQueueList(queue);
         System.out.println("result: " + result);
 
-        if(result == 1) {
+        if (result == 1) {
             System.out.println(music.getName() + "를 재생목록에 추가했습니다.");
         } else {
             System.out.println("입력하신 노래 번호가 없습니다.");
@@ -106,7 +107,7 @@ public class MusicService {
     public void removeQueueMusic(int selectMusicNo) {
         int result = queueRepository.deleteQueueMusic(selectMusicNo);
 
-        if(result == 1) {
+        if (result == 1) {
             System.out.println("노래가 삭제되었습니다.");
         } else {
             System.out.println("입력하신 노래 번호가 없습니다.");
@@ -144,5 +145,32 @@ public class MusicService {
         } else {
             System.out.println("플레이리스트 번호 " + playlistNo + "를 찾을 수 없습니다.");
         }
+    }
+
+    // music 객체를 playlist에 넣는 메소드
+    public void musicToPlaylist(int musicNo, int playlistNo) {
+
+        // 사용자가 선택한 노래 찾기
+        Music music = musicRepository.findMusicByNo(musicNo);
+        if (music == null) {
+            System.out.println("해당 번호의 음악이 없습니다.");
+            return;
+        }
+
+        Playlist playlist = playlistRepository.findPlaylistByNo(playlistNo);
+        if (playlist == null) {
+            playlist = new Playlist(playlistNo, "새 플레이리스트", 0, 0, new ArrayList<>());
+        }
+
+        // 플레이리스트에 노래 추가
+        playlist.getMusicList().add(music);
+        playlist.addMusic(music);
+
+        // 플레이리스트 목록 업데이트
+        playlistRepository.addPlaylistList(playlist);
+
+
+        System.out.println(music.getName() + " 을(를) 플레이리스트에 추가했습니다.");
+
     }
 }
