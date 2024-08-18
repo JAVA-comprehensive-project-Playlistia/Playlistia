@@ -5,23 +5,25 @@ import com.jems.playlistia.Aggregate.Playlist;
 import com.jems.playlistia.Aggregate.Queue;
 import com.jems.playlistia.repository.MusicRepository;
 import com.jems.playlistia.repository.PlaylistRepository;
+import com.jems.playlistia.repository.QueueRepository;
 import com.jems.playlistia.service.MusicService;
 
 import javax.script.ScriptContext;
+import java.io.File;
 import java.util.Scanner;
 
 public class Application {
 
-    private static final MusicService musicService = new MusicService();
     private static final MusicRepository musicRepository = new MusicRepository();
-
     private static final PlaylistRepository playlistRepository = new PlaylistRepository();
+    private static final MusicService musicService = new MusicService();
 
     private static int selectedMusicNo = 0;
 
     public static void main(String[] args) {
-//        Application app = new Application();
+
         Scanner scanner = new Scanner(System.in);
+
         while (true) {
             System.out.println("===== Playlistia =====");
             System.out.println("세상 모든 음악 여기 모여라! 플레이리스티아에 오신 것을 환영합니다.");
@@ -42,7 +44,11 @@ public class Application {
                         playMusic(selectedMusic);   // 선택한 노래 재생
                     }
                     break;
-                case 2: musicService.showAllQueue(); break;  // 1번과 유사하게
+                case 2:
+                    musicService.showAllQueue();
+                    selectedMusicNo = chooseMusicNo();
+
+                    break;  // 1번과 유사하게
                 case 3:
                     musicService.findAllPlaylist(); // 전체 플레이리스트 보여주기
 
@@ -55,14 +61,13 @@ public class Application {
 
                 case 9:
                     System.out.println("플레이리스티아를 종료합니다. 또 만나요!");
+                    shutdown(); // 종료 시 데이터 저장
                     return;
                 default:
                     System.out.println("메뉴 번호를 잘못 입력했습니다.");
                     break;
             }
-
         }
-
     }
 
     private static int choosePlaylistNo() {
@@ -113,27 +118,36 @@ public class Application {
         return selectedMenuNo;
     }
 
-
-    // Music 객체를 받아 해당 노래의 이름 가져오기
     private static void playMusic(Music music) {
-
         Scanner sc = new Scanner(System.in);
-        // 저장된 노래 번호
-        System.out.println(music.getName() + " 를 재생 중 ...");
+        boolean exit = false;
 
-        while (true) {
-            int menuNo = showMusicMenu2();   // 노래 재생 후 추가 메뉴 선택 받기
+        while (!exit) {
+            int menuNo1 = showMusicMenu1(); // 노래 선택 후 추가 메뉴 보이기
 
-            if (menuNo == 1) {  // 1. 노래 멈춤
-                System.out.println(music.getName() + " 의 재생이 멈춤");
-                return; // 노래 멈추고 return 해서 메인 메뉴로
-                // 노래 멈추고 다시 재생도 할 수 있게 하려면 어케 하지??
+            switch (menuNo1) {
+                case 1:
+                    System.out.println(music.getName() + " 을(를) 재생 중...");
+                    int menuNo2 = showMusicMenu2(); // 노래 재생 중 추가 메뉴 보이기
 
-            } else if (menuNo == 2) {   // 2. 나가기
-                return;
+                    if (menuNo2 == 1) {
+                        System.out.println(music.getName() + " 재생을 멈춤");
+                    } else if (menuNo2 == 2) {
+                        exit = true;   // 나가기
+                    }
+                    break;
+                case 2:
+                    System.out.println("재생 목록에 추가");
+                    break;
+                case 3:
+                    System.out.println("플레이리스트에 추가");
+                    int playlistNo = choosePlaylistNo();    // 사용자로부터 플레이리스트 번호 입력받기
+                    playlistRepository.addMusicToPlaylist(music, playlistNo);
 
-            } else {
-                System.out.println(" 메뉴 번호를 잘못 입력했습니다.");
+                    break;
+                default:
+                    System.out.println("메뉴 번호를 잘못 입력했습니다.");
+                    break;
             }
         }
 
@@ -147,7 +161,11 @@ public class Application {
         selectedMusicNo = sc.nextInt();
 
         musicService.registQueue(selectedMusicNo);
-
     }
 
+    public static void shutdown() {
+        String FILE_PATH = "src/main/java/com/jems/playlistia/db/Playlist.dat";
+        playlistRepository.savePlaylists(new File((FILE_PATH)), playlistRepository.selectAllPlaylist());
+        System.out.println("플레이리스트가 저장되었습니다.");
+    }
 }

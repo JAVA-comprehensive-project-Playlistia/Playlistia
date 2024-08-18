@@ -7,6 +7,8 @@ import com.jems.playlistia.repository.MusicRepository;
 import com.jems.playlistia.repository.PlaylistRepository;
 import com.jems.playlistia.repository.QueueRepository;
 
+import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MusicService {
@@ -14,6 +16,8 @@ public class MusicService {
     private final MusicRepository musicRepository = new MusicRepository();
     private final QueueRepository queueRepository = new QueueRepository();
     private final PlaylistRepository playlistRepository = new PlaylistRepository();
+
+    private static final String FILE_PATH ="src/main/java/com/jems/playlistia/db/Playlist.dat";
     public void findAllMusic() {
         ArrayList<Music> findMusic = musicRepository.selectAllMusic();
 
@@ -32,17 +36,29 @@ public class MusicService {
     }
 
     // 특정 플레이리스트의 모든 음악을 보여주는 메소드
-    public void findAllMusicInPlaylist(int playlistNo) {
-        ArrayList<Music> musicList = playlistRepository.selectedAllMusicInPlaylist(playlistNo);
-        // 플레이리스트의 모든 음악을 musicList 배열에 넣기
 
-        if (musicList == null | musicList.isEmpty()) {
-            System.out.println("선택하신 플레이리스트가 비어있습니다.");
-        } else {
-            for (Music music : musicList) {
-                System.out.println("music = " + music);
-            }
+    public void findAllMusicInPlaylist(int playlistNo) {
+
+        Playlist playlist = playlistRepository.findPlaylistByNo(playlistNo);
+        if (playlist == null) {
+            System.out.println(" 해당 번호의 플레이 리스트가 없습니다.");
+            return;
         }
+        ArrayList<Music> musicList = playlist.getMusicList();
+        for (Music music : musicList) {
+            System.out.println(music.getName() + " - " + music.getSinger());
+        }
+
+//        ArrayList<Music> musicList = playlistRepository.selectedAllMusicInPlaylist(playlistNo);
+//        // 플레이리스트의 모든 음악을 musicList 배열에 넣기
+//
+//        if (musicList == null | musicList.isEmpty()) {
+//            System.out.println("선택하신 플레이리스트가 비어있습니다.");
+//        } else {
+//            for (Music music : musicList) {
+//                System.out.println("music = " + music);
+//            }
+//        }
 
     }
 
@@ -73,4 +89,9 @@ public class MusicService {
         }
 
     }
+
+
+
+
+
 }

@@ -1,6 +1,7 @@
 package com.jems.playlistia.Aggregate;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 

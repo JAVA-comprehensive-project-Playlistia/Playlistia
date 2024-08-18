@@ -96,4 +96,13 @@ public class Playlist implements Serializable {
     }
 
 
+    public void addMusic(Music music) {
+        if (musicList == null) {
+            musicList = new ArrayList<>();
+        }
+        musicList.add(music);
+        totalDuration++;
+        totalDuration += music.getDuration();
+        System.out.println("totlaDuration: " + totalDuration);
+    }
 }
